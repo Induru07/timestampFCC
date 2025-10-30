@@ -18,10 +18,20 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
+const isInvaildDate = (date) => date.toUTCString() === "Invaild Date" 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/Date", function (req, res) {
+  let Date = new Date(req.params.date)
+
+  if (isInvaildDate(date)){
+    date = new Date(+req.params.date)
+    
+  }
+  
+  res.json({
+    unix: date.getTime()
+      utc: date.toUTCString()
+});
 });
 
 
