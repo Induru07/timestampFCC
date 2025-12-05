@@ -18,6 +18,41 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+//IMESTAMP API ENDPOINT
+
+app.get("/api/:date?", function(req, res){
+  let dateInput = req.params.date;
+  let dateObject;
+  //check if the date parameter is empty
+  //Result: Return the curren time
+  if(!dateInput) {
+    dateObject = new Date();
+  }else {
+    //Check if the input is a number(UNIX Timestamp)
+    //Note: Numbers in params are strings, so "1451001600000" needs to be checked
+    if (!isNaN(dateInput)) {
+      //IT's a number! Convert it to an integer first.
+      dateObject = new Date(parseInt(dateInput));
+    }else{
+      //It's a string(e.g. , "2025-12-06")
+      dateObject = new Date(dateInput);
+    }
+  }
+
+  //Validate the Date
+  //If the date is invalid, Date.toString() returns "Invalid Date"
+  if (dateObject.toString() === "Invalid Date") {
+    res.json({ error: "Invalid Date" });
+  } else {
+    //Success. Return Unix and UTC formats
+    res.json({
+      unix: dateObject.getTime(),
+      utc: dateObject.toUTCString()
+    });
+  }
+
+}
+);
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
